@@ -20,14 +20,19 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Создание рабочей директории
 WORKDIR /var/www
 
-# Копируем только composer файлы
-COPY src/composer.json src/composer.lock ./
+# Копируем только composer.json сначала
+COPY src/composer.json .
 
-## Установка зависимостей (с кэшированием)
-#RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-interaction
+# Генерируем composer.lock (если его нет)
+RUN if [ ! -f composer.lock ]; then \
+    composer install --prefer-dist --no-scripts --no-interaction --no-plugins; \
+    fi
+
+# Теперь полная установка
+RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-interaction
 
 # Копируем остальные файлы
 COPY src .
 
-## Оптимизация автозагрузки
-#RUN composer dump-autoload --optimize --apcu
+# Оптимизация автозагрузки
+RUN composer dump-autoload --optimize --apcu
