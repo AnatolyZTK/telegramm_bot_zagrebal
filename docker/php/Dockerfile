@@ -1,6 +1,7 @@
+# Базовый образ PHP с необходимыми расширениями
 FROM php:8.4-fpm
 
-# Установка зависимостей
+# Установка системных зависимостей
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -8,11 +9,8 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    zip \
-    unzip
-
-# Установка PHP-расширений
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd sockets
+    unzip \
+    && docker-php-ext-install pdo pdo_mysql zip exif pcntl bcmath gd sockets
 
 # Установка Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -20,19 +18,30 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Создание рабочей директории
 WORKDIR /var/www
 
-# Копируем только composer.json сначала
-COPY src/composer.json .
+# Копируем только файлы composer сначала
+COPY composer.json composer.lock ./
 
-# Генерируем composer.lock (если его нет)
-RUN if [ ! -f composer.lock ]; then \
-    composer install --prefer-dist --no-scripts --no-interaction --no-plugins; \
-    fi
+# Установка зависимостей с оптимизацией
+RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --optimize-autoloader
 
-# Теперь полная установка
-RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-interaction
+# Копируем весь проект
+COPY . .
 
-# Копируем остальные файлы
-COPY src .
+# Создаем необходимые директории и устанавливаем права
+RUN mkdir -p var/cache var/log \
+    && chown -R www-data:www-data var \
+    && chmod -R 777 var
 
-# Оптимизация автозагрузки
-RUN composer dump-autoload --optimize --apcu
+## Очистка кэша Symfony (только если папка var существует)
+#RUN if [ -d var ]; then \
+#    php bin/console cache:clear --no-warmup \
+#    && php bin/console cache:warmup; \
+#    fi
+
+# Оптимизация автозагрузчика
+RUN composer dump-autoload --optimize
+
+# Точка входа
+CMD ["php-fpm"]
+
+EXPOSE 9000
