@@ -1,5 +1,4 @@
 <?php
-
 //
 //use App\Kernel;
 //
@@ -8,269 +7,496 @@
 //return function (array $context) {
 //    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
 //};
-header('Content-Type: text/html; charset=utf-8');
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Наш Telegram Бот</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <title>Общественная организация «Мордовские Волки»</title>
     <style>
-        :root {
-            --primary-color: #0088cc;
-            --secondary-color: #f8f9fa;
-            --accent-color: #17a2b8;
-            --text-color: #333;
-            --light-color: #fff;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
+        /* Сброс стилей и базовые настройки */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
 
         body {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Цвета */
+        :root {
+            --orange: #FF6B00;
+            --black: #000000;
+            --gray: #f0f0f0;
+        }
+
+        /* Шапка */
+        header {
+            background-color: var(--black);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .container {
+            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
         }
 
-        header {
-            background-color: var(--primary-color);
-            color: var(--light-color);
-            padding: 2rem 0;
-            text-align: center;
-            box-shadow: var(--shadow);
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            text-transform: uppercase;
         }
 
-        .logo i {
-            color: var(--light-color);
+        .logo span {
+            color: var(--orange);
         }
 
-        .tagline {
-            font-size: 1.2rem;
-            opacity: 0.9;
+        /* Навигация */
+        nav ul {
+            display: flex;
+            list-style: none;
         }
 
-        main {
-            flex: 1;
-            padding: 3rem 0;
+        nav ul li {
+            margin-left: 20px;
         }
 
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            color: var(--orange);
+        }
+
+        /* Герой-баннер */
         .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1920x1080') center/cover no-repeat;
+            color: white;
+            padding: 100px 0;
             text-align: center;
-            margin-bottom: 3rem;
         }
 
         .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 span {
+            color: var(--orange);
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 20px;
+            margin-bottom: 30px;
             max-width: 800px;
-            margin: 0 auto 2rem;
-        }
-
-        .bot-card {
-            background-color: var(--light-color);
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .bot-icon {
-            font-size: 4rem;
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .bot-name {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .bot-description {
-            margin-bottom: 2rem;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .btn {
             display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--light-color);
-            padding: 0.8rem 1.8rem;
-            border-radius: 50px;
+            background-color: var(--orange);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 4px;
             text-decoration: none;
             font-weight: bold;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            text-transform: uppercase;
         }
 
         .btn:hover {
-            background-color: #006699;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background-color: #e05d00;
+            transform: translateY(-3px);
         }
 
-        .btn-telegram {
-            background-color: var(--primary-color);
+        /* О клубе */
+        .about {
+            padding: 60px 0;
+            background-color: white;
         }
 
-        .features {
+        .about h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+
+        .about-content {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 2rem;
-            margin-top: 3rem;
+            gap: 40px;
         }
 
-        .feature {
-            flex: 1 1 300px;
-            background-color: var(--light-color);
-            padding: 1.5rem;
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            max-width: 600px;
+        }
+
+        .about-text h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--black);
+        }
+
+        .about-text p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .values {
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        .values h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--black);
+        }
+
+        .values-list {
+            list-style: none;
+        }
+
+        .values-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .values-list li:before {
+            content: "✔";
+            color: var(--orange);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Галерея */
+        .gallery {
+            padding: 60px 0;
+            background-color: var(--gray);
+        }
+
+        .gallery h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
             border-radius: 8px;
-            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+
+        /* Призыв к действию */
+        .cta {
+            background-color: var(--black);
+            color: white;
+            padding: 80px 0;
             text-align: center;
         }
 
-        .feature-icon {
-            font-size: 2rem;
-            color: var(--accent-color);
-            margin-bottom: 1rem;
+        .cta h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
         }
 
+        .cta p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Подвал */
         footer {
-            background-color: var(--primary-color);
-            color: var(--light-color);
+            background-color: var(--black);
+            color: white;
+            padding: 30px 0;
             text-align: center;
-            padding: 1.5rem 0;
-            margin-top: 3rem;
         }
 
-        .social-links {
-            margin-top: 1rem;
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
 
-        .social-links a {
-            color: var(--light-color);
-            margin: 0 10px;
-            font-size: 1.5rem;
-            transition: opacity 0.3s;
+        .footer-logo {
+            flex: 1;
+            min-width: 250px;
+            text-align: left;
+            margin-bottom: 20px;
         }
 
-        .social-links a:hover {
-            opacity: 0.8;
+        .footer-logo .logo {
+            font-size: 28px;
+            margin-bottom: 10px;
         }
 
+        .footer-links {
+            flex: 1;
+            min-width: 250px;
+            text-align: left;
+        }
+
+        .footer-links h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--orange);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-links ul li a:hover {
+            color: var(--orange);
+        }
+
+        .footer-contact {
+            flex: 1;
+            min-width: 250px;
+            text-align: left;
+        }
+
+        .footer-contact h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--orange);
+        }
+
+        .copyright {
+            opacity: 0.7;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+
+        /* Медиазапросы для адаптива */
         @media (max-width: 768px) {
-            .logo {
-                font-size: 2rem;
+            .hero {
+                padding: 60px 0;
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 32px;
             }
 
-            .bot-icon {
-                font-size: 3rem;
+            .hero p {
+                font-size: 18px;
+            }
+
+            .about-content {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-logo, .footer-links, .footer-contact {
+                text-align: center;
+                margin-bottom: 30px;
             }
         }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: grey;
+            position: relative;
+            display: inline-block;
+        }
+        .logo::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: #FF6B00;
+            margin-top: 5px;
+        }
+        .logo span {
+            color: #FF6B00;
+        }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <i class="fab fa-telegram"></i>
+<!-- Шапка -->
+<header>
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">Мото <span>Мордовия</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#">Главная</a></li>
+                    <li><a href="#">О клубе</a></li>
+                    <li><a href="#">Галерея</a></li>
+                    <li><a href="#">Маршруты</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<!-- Герой-баннер -->
+<section class="hero">
+    <div class="container">
+        <h1>Общественная организация <span>«МотоМордовия»</span></h1>
+        <p>Республика Мордовия. Дороги зовут.</p>
+        <a href="#" class="btn">Вступить в клуб</a>
+    </div>
+</section>
+
+<!-- О клубе -->
+<section class="about">
+    <div class="container">
+        <h2>О нашем клубе</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Братство на двух колесах</h3>
+                <p>Мы — сообщество, для которого мотоцикл — не просто железо, а свобода в чистом виде. Саранск, Рузаевка, Темников или бескрайние трассы за пределами республики — наш дом там, где рев двигателя сливается с шумом ветра в соснах.</p>
+                <p>Основанный в 2010 году, наш клуб объединяет настоящих ценителей дороги и адреналина. Мы не просто катаемся — мы живем мотоциклами.</p>
             </div>
-            <div class="tagline">Инновационный Telegram бот для вашего удобства</div>
-        </div>
-    </header>
-
-    <main>
-        <div class="container">
-            <section class="hero">
-                <h1>Добро пожаловать в наш Telegram бот!</h1>
-                <p>Удобный, быстрый и функциональный помощник для решения ваших задач. Бот находится в разработке и скоро будет доступен.</p>
-            </section>
-
-            <section class="bot-card">
-                <div class="bot-icon">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <h2 class="bot-name">My Awesome Bot</h2>
-                <p class="bot-description">Наш бот предоставляет уникальные возможности для автоматизации задач, уведомлений и многого другого. Оставайтесь на связи, чтобы первыми узнать о запуске!</p>
-                <a href="https://t.me/YourBotName" class="btn btn-telegram" target="_blank">
-                    <i class="fab fa-telegram"></i> Перейти в Telegram
-                </a>
-            </section>
-
-            <section class="features">
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Быстро</h3>
-                    <p>Мгновенная обработка запросов и молниеносная скорость работы</p>
-                </div>
-
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Безопасно</h3>
-                    <p>Все данные защищены современными методами шифрования</p>
-                </div>
-
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <h3>Функционально</h3>
-                    <p>Множество полезных функций для вашего удобства</p>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>© <?php echo date('Y'); ?> Наш Telegram Бот. Все права защищены.</p>
-            <div class="social-links">
-                <a href="#" target="_blank"><i class="fab fa-telegram"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+            <div class="values">
+                <h3>Что нас объединяет:</h3>
+                <ul class="values-list">
+                    <li><strong>Дорога</strong> — наш главный закон</li>
+                    <li><strong>Верность</strong> — слово крепче цепи</li>
+                    <li><strong>Адреналин</strong> — без него как без бензина</li>
+                    <li><strong>Уважение</strong> — к каждому, кто разделяет нашу страсть</li>
+                    <li><strong>Традиции</strong> — которые мы создаем вместе</li>
+                </ul>
             </div>
         </div>
-    </footer>
+    </div>
+</section>
+
+<!-- Галерея -->
+<section class="gallery">
+    <div class="container">
+        <h2>Наши моменты</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item" style="background-image: url('https://via.placeholder.com/600x400')"></div>
+            <div class="gallery-item" style="background-image: url('https://via.placeholder.com/600x400')"></div>
+            <div class="gallery-item" style="background-image: url('https://via.placeholder.com/600x400')"></div>
+            <div class="gallery-item" style="background-image: url('https://via.placeholder.com/600x400')"></div>
+            <div class="gallery-item" style="background-image: url('https://via.placeholder.com/600x400')"></div>
+            <div class="gallery-item" style="background-image: url('https://via.placeholder.com/600x400')"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Призыв к действию -->
+<section class="cta">
+    <div class="container">
+        <h2>Вступай в строй!</h2>
+        <p>Пока колесо крутится — жизнь продолжается. Стань частью нашего братства и открой для себя настоящую свободу на двух колесах.</p>
+        <a href="#" class="btn">Присоединиться</a>
+    </div>
+</section>
+
+<!-- Подвал -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo">Мото <span>Мордовия</span></div>
+                <p>Общественная организация Республики Мордовия</p>
+            </div>
+            <div class="footer-links">
+                <h3>Навигация</h3>
+                <ul>
+                    <li><a href="#">Главная</a></li>
+                    <li><a href="#">О клубе</a></li>
+                    <li><a href="#">Галерея</a></li>
+                    <li><a href="#">Маршруты</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Контакты</h3>
+                <p>Саранск, ул. Мотоциклетная, 13</p>
+                <p>Телефон: +7 (834) 222-33-44</p>
+                <p>Email: info@mordovvolki.ru</p>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 Общественная организация «МотоМордовия». Все права защищены.
+        </div>
+    </div>
+</footer>
 </body>
 </html>
-
