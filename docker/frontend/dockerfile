@@ -1,0 +1,36 @@
+# Базовый образ для сборки
+FROM node:20-alpine AS builder
+
+# Рабочая директория
+WORKDIR /frontend
+
+# Копируем зависимости
+COPY /frontend/package*.json ./
+
+# Устанавливаем зависимости
+RUN npm install
+
+# Копируем исходный код
+COPY . ./frontend
+
+# Собираем приложение
+RUN npm run build
+
+# Базовый образ для запуска
+FROM node:20-alpine as production-stage
+
+# Рабочая директория
+WORKDIR /frontend
+
+# Копируем только нужные файлы
+COPY --from=builder /frontend/.output ./.output
+COPY --from=builder /frontend/node_modules ./node_modules
+
+# Переменные окружения
+ENV NUXT_HOST=0.0.0.0
+ENV NUXT_PORT=3000
+
+EXPOSE 3000
+
+# Запускаем сервер
+CMD ["node", ".output/server/index.mjs"]
